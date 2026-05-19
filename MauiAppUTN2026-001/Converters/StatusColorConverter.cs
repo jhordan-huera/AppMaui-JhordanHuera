@@ -85,4 +85,20 @@ namespace MauiAppUTN2026_001.Converters
             throw new NotImplementedException();
         }
     }
+
+    /// <summary>
+    /// Retorna true si el valor no es null (para IsVisible bindings).
+    /// </summary>
+    public class IsNotNullConverter : IValueConverter
+    {
+        public object? Convert(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            return value != null;
+        }
+
+        public object? ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

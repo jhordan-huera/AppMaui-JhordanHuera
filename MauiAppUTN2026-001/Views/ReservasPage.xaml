@@ -122,24 +122,41 @@
                                                FontSize="13" TextColor="#64748B" />
                                     </HorizontalStackLayout>
 
-                                    <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2"
-                                                           Margin="0,10,0,0"
-                                                           Spacing="10">
-                                        <Frame Padding="10,5"
-                                               CornerRadius="8"
-                                               BorderColor="Transparent"
-                                               HasShadow="False"
-                                               BackgroundColor="{Binding Estado, Converter={StaticResource StatusBackgroundConverter}}">
-                                            <Label Text="{Binding Estado, Converter={StaticResource StatusTextConverter}}"
+                                    <Grid Grid.Row="2" Grid.ColumnSpan="2"
+                                          ColumnDefinitions="*,Auto"
+                                          Margin="0,10,0,0">
+                                        <HorizontalStackLayout Grid.Column="0"
+                                                               Spacing="10">
+                                            <Frame Padding="10,5"
+                                                   CornerRadius="8"
+                                                   BorderColor="Transparent"
+                                                   HasShadow="False"
+                                                   BackgroundColor="{Binding Estado, Converter={StaticResource StatusBackgroundConverter}}">
+                                                <Label Text="{Binding Estado, Converter={StaticResource StatusTextConverter}}"
+                                                       FontSize="12"
+                                                       FontAttributes="Bold"
+                                                       TextColor="{Binding Estado, Converter={StaticResource StatusColorConverter}}" />
+                                            </Frame>
+                                            <Label Text="{Binding NumeroHabitaciones, StringFormat='{0} hab.'}"
                                                    FontSize="12"
-                                                   FontAttributes="Bold"
-                                                   TextColor="{Binding Estado, Converter={StaticResource StatusColorConverter}}" />
-                                        </Frame>
-                                        <Label Text="{Binding NumeroHabitaciones, StringFormat='{0} hab.'}"
-                                               FontSize="12"
-                                               TextColor="#64748B"
-                                               VerticalOptions="Center" />
-                                    </HorizontalStackLayout>
+                                                   TextColor="#64748B"
+                                                   VerticalOptions="Center" />
+                                        </HorizontalStackLayout>
+
+                                        <!-- Botón Eliminar visible -->
+                                        <Button Grid.Column="1"
+                                                Text="🗑️"
+                                                FontSize="16"
+                                                BackgroundColor="#FEE2E2"
+                                                TextColor="#EF4444"
+                                                CornerRadius="10"
+                                                WidthRequest="40"
+                                                HeightRequest="40"
+                                                Padding="0"
+                                                VerticalOptions="Center"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ReservasViewModel}}, Path=DeleteReservaCommand}"
+                                                CommandParameter="{Binding .}" />
+                                    </Grid>
 
                                 </Grid>
                             </Frame>

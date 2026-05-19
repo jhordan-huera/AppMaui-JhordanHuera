@@ -31,10 +31,26 @@ namespace MauiAppUTN2026_001.ViewModels
         [ObservableProperty]
         private bool _isEditing;
 
+        // ── Habitación (solo para creación) ──
+
+        [ObservableProperty]
+        private Habitacion? _selectedHabitacion;
+
+        [ObservableProperty]
+        private string _numeroNochesText = "1";
+
+        [ObservableProperty]
+        private double _subtotal;
+
         public List<string> Estados { get; } = new()
         {
             "Pendiente", "Confirmada", "EnCurso", "Completada", "Cancelada"
         };
+
+        /// <summary>
+        /// Catálogo de habitaciones predefinidas.
+        /// </summary>
+        public List<Habitacion> Habitaciones { get; } = Habitacion.ObtenerHabitaciones();
 
         public ReservaFormViewModel(DatabaseService db)
         {
@@ -52,6 +68,37 @@ namespace MauiAppUTN2026_001.ViewModels
             }
         }
 
+        partial void OnFechaCheckInChanged(DateTime value) => AutoCalculateNoches();
+        partial void OnFechaCheckOutChanged(DateTime value) => AutoCalculateNoches();
+
+        /// <summary>
+        /// Calcula automáticamente el número de noches según las fechas.
+        /// </summary>
+        private void AutoCalculateNoches()
+        {
+            var dias = (FechaCheckOut - FechaCheckIn).Days;
+            if (dias > 0)
+            {
+                NumeroNochesText = dias.ToString();
+            }
+        }
+
+        partial void OnSelectedHabitacionChanged(Habitacion? value) => CalculateSubtotal();
+        partial void OnNumeroNochesTextChanged(string value) => CalculateSubtotal();
+
+        private void CalculateSubtotal()
+        {
+            if (SelectedHabitacion != null &&
+                int.TryParse(NumeroNochesText, out int noches) && noches > 0)
+            {
+                Subtotal = SelectedHabitacion.PrecioPorNoche * noches;
+            }
+            else
+            {
+                Subtotal = 0;
+            }
+        }
+
         [RelayCommand]
         public async Task LoadReservaAsync()
         {
@@ -64,6 +111,16 @@ namespace MauiAppUTN2026_001.ViewModels
                 FechaCheckOut = reserva.FechaCheckOut;
                 SelectedEstadoIndex = Estados.IndexOf(reserva.Estado);
                 if (SelectedEstadoIndex < 0) SelectedEstadoIndex = 0;
+
+                // Cargar habitación existente si hay
+                var detalles = await _db.GetDetallesAsync(ReservaId);
+                if (detalles.Count > 0)
+                {
+                    var first = detalles[0];
+                    SelectedHabitacion = Habitaciones.FirstOrDefault(
+                        h => h.Numero == first.NumeroHabitacion) ?? Habitaciones.FirstOrDefault();
+                    NumeroNochesText = first.NumeroNoches.ToString();
+                }
             }
         }
 
@@ -85,6 +142,21 @@ namespace MauiAppUTN2026_001.ViewModels
                 return;
             }
 
+            if (SelectedHabitacion == null)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Validación", "Seleccione una habitación.", "OK");
+                return;
+            }
+
+            if (!int.TryParse(NumeroNochesText, out int noches) || noches <= 0)
+            {
+                await Shell.Current.DisplayAlert(
+                    "Validación", "El número de noches debe ser mayor a 0.", "OK");
+                return;
+            }
+
+            // Guardar reserva
             Reserva reserva;
             if (IsEditing)
             {
@@ -102,6 +174,30 @@ namespace MauiAppUTN2026_001.ViewModels
             reserva.Estado = Estados[SelectedEstadoIndex];
 
             await _db.SaveReservaAsync(reserva);
+
+            // Guardar/actualizar la habitación como detalle
+            var detallesExistentes = await _db.GetDetallesAsync(reserva.Id);
+
+            DetalleReserva detalle;
+            if (detallesExistentes.Count > 0)
+            {
+                // Actualizar el primer detalle existente
+                detalle = detallesExistentes[0];
+            }
+            else
+            {
+                detalle = new DetalleReserva();
+            }
+
+            detalle.ReservaId = reserva.Id;
+            detalle.NumeroHabitacion = SelectedHabitacion.Numero;
+            detalle.TipoHabitacion = SelectedHabitacion.Tipo;
+            detalle.PrecioPorNoche = SelectedHabitacion.PrecioPorNoche;
+            detalle.NumeroNoches = noches;
+
+            await _db.SaveDetalleAsync(detalle);
+            await _db.RecalcularTotalAsync(reserva.Id);
+
             await Shell.Current.GoToAsync("..");
         }
 

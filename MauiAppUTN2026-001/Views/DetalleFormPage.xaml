@@ -2,10 +2,16 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MauiAppUTN2026_001.ViewModels"
+             xmlns:models="clr-namespace:MauiAppUTN2026_001.Models"
+             xmlns:converters="clr-namespace:MauiAppUTN2026_001.Converters"
              x:Class="MauiAppUTN2026_001.Views.DetalleFormPage"
              x:DataType="vm:DetalleFormViewModel"
              Title="{Binding Title}"
              BackgroundColor="#F1F5F9">
+
+    <ContentPage.Resources>
+        <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+    </ContentPage.Resources>
 
     <ScrollView>
         <VerticalStackLayout Padding="20" Spacing="0">
@@ -18,35 +24,15 @@
 
                 <VerticalStackLayout Spacing="16">
 
-                    <Label Text="Datos de la Habitacion"
+                    <Label Text="Seleccionar Habitación"
                            FontSize="20"
                            FontAttributes="Bold"
                            TextColor="#1E293B"
                            Margin="0,0,0,4" />
 
-                    <!-- Numero de habitacion -->
+                    <!-- Picker de habitaciones predefinidas -->
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Numero de Habitacion *"
-                               FontSize="13"
-                               FontAttributes="Bold"
-                               TextColor="#475569" />
-                        <Frame Padding="12,0"
-                               CornerRadius="10"
-                               BorderColor="#E2E8F0"
-                               HasShadow="False"
-                               BackgroundColor="#F8FAFC">
-                            <Entry Text="{Binding NumeroHabitacion}"
-                                   Placeholder="Ej: 101, 202, 305"
-                                   PlaceholderColor="#94A3B8"
-                                   FontSize="15"
-                                   TextColor="#1E293B"
-                                   BackgroundColor="Transparent" />
-                        </Frame>
-                    </VerticalStackLayout>
-
-                    <!-- Tipo -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Tipo de Habitacion"
+                        <Label Text="Habitación *"
                                FontSize="13"
                                FontAttributes="Bold"
                                TextColor="#475569" />
@@ -55,38 +41,63 @@
                                BorderColor="#E2E8F0"
                                HasShadow="False"
                                BackgroundColor="#F8FAFC">
-                            <Picker ItemsSource="{Binding TiposHabitacion}"
-                                    SelectedIndex="{Binding SelectedTipoIndex}"
+                            <Picker ItemsSource="{Binding Habitaciones}"
+                                    SelectedItem="{Binding SelectedHabitacion}"
+                                    ItemDisplayBinding="{Binding Display}"
                                     FontSize="15"
                                     TextColor="#1E293B"
+                                    Title="Seleccione una habitación"
+                                    TitleColor="#94A3B8"
                                     BackgroundColor="Transparent" />
                         </Frame>
                     </VerticalStackLayout>
 
-                    <!-- Precio -->
-                    <VerticalStackLayout Spacing="4">
-                        <Label Text="Precio por Noche ($) *"
-                               FontSize="13"
-                               FontAttributes="Bold"
-                               TextColor="#475569" />
-                        <Frame Padding="12,0"
-                               CornerRadius="10"
-                               BorderColor="#E2E8F0"
-                               HasShadow="False"
-                               BackgroundColor="#F8FAFC">
-                            <Entry Text="{Binding PrecioPorNocheText}"
-                                   Placeholder="Ej: 85.00"
-                                   Keyboard="Numeric"
-                                   PlaceholderColor="#94A3B8"
-                                   FontSize="15"
-                                   TextColor="#1E293B"
-                                   BackgroundColor="Transparent" />
-                        </Frame>
-                    </VerticalStackLayout>
+                    <!-- Info de la habitación seleccionada -->
+                    <Frame BackgroundColor="#F8FAFC"
+                           Padding="16,12"
+                           CornerRadius="12"
+                           BorderColor="#E2E8F0"
+                           HasShadow="False"
+                           IsVisible="{Binding SelectedHabitacion, Converter={StaticResource IsNotNullConverter}}">
+                        <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="6">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="Número"
+                                   FontSize="11"
+                                   TextColor="#94A3B8"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding SelectedHabitacion.Numero}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#1E293B" />
+
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="Tipo"
+                                   FontSize="11"
+                                   TextColor="#94A3B8"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding SelectedHabitacion.Tipo}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#6366F1" />
+
+                            <Label Grid.Row="0" Grid.Column="2"
+                                   Text="Precio/Noche"
+                                   FontSize="11"
+                                   TextColor="#94A3B8"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="2"
+                                   Text="{Binding SelectedHabitacion.PrecioPorNoche, StringFormat='${0:N2}'}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#10B981" />
+                        </Grid>
+                    </Frame>
 
                     <!-- Noches -->
                     <VerticalStackLayout Spacing="4">
-                        <Label Text="Numero de Noches *"
+                        <Label Text="Número de Noches *"
                                FontSize="13"
                                FontAttributes="Bold"
                                TextColor="#475569" />

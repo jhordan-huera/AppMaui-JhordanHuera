@@ -18,13 +18,7 @@ namespace MauiAppUTN2026_001.ViewModels
         private int _detalleId;
 
         [ObservableProperty]
-        private string _numeroHabitacion = string.Empty;
-
-        [ObservableProperty]
-        private int _selectedTipoIndex;
-
-        [ObservableProperty]
-        private string _precioPorNocheText = string.Empty;
+        private Habitacion? _selectedHabitacion;
 
         [ObservableProperty]
         private string _numeroNochesText = "1";
@@ -35,10 +29,10 @@ namespace MauiAppUTN2026_001.ViewModels
         [ObservableProperty]
         private bool _isEditing;
 
-        public List<string> TiposHabitacion { get; } = new()
-        {
-            "Individual", "Doble", "Suite", "Familiar", "Deluxe"
-        };
+        /// <summary>
+        /// Catálogo de habitaciones predefinidas.
+        /// </summary>
+        public List<Habitacion> Habitaciones { get; } = Habitacion.ObtenerHabitaciones();
 
         public DetalleFormViewModel(DatabaseService db)
         {
@@ -56,15 +50,15 @@ namespace MauiAppUTN2026_001.ViewModels
             }
         }
 
-        partial void OnPrecioPorNocheTextChanged(string value) => CalculateSubtotal();
+        partial void OnSelectedHabitacionChanged(Habitacion? value) => CalculateSubtotal();
         partial void OnNumeroNochesTextChanged(string value) => CalculateSubtotal();
 
         private void CalculateSubtotal()
         {
-            if (double.TryParse(PrecioPorNocheText, out double precio) &&
-                int.TryParse(NumeroNochesText, out int noches))
+            if (SelectedHabitacion != null &&
+                int.TryParse(NumeroNochesText, out int noches) && noches > 0)
             {
-                Subtotal = precio * noches;
+                Subtotal = SelectedHabitacion.PrecioPorNoche * noches;
             }
             else
             {
@@ -78,10 +72,9 @@ namespace MauiAppUTN2026_001.ViewModels
             var detalle = await _db.GetDetalleAsync(DetalleId);
             if (detalle != null)
             {
-                NumeroHabitacion = detalle.NumeroHabitacion;
-                SelectedTipoIndex = TiposHabitacion.IndexOf(detalle.TipoHabitacion);
-                if (SelectedTipoIndex < 0) SelectedTipoIndex = 0;
-                PrecioPorNocheText = detalle.PrecioPorNoche.ToString("F2");
+                // Buscar la habitación predefinida que coincida
+                SelectedHabitacion = Habitaciones.FirstOrDefault(
+                    h => h.Numero == detalle.NumeroHabitacion) ?? Habitaciones.FirstOrDefault();
                 NumeroNochesText = detalle.NumeroNoches.ToString();
                 Subtotal = detalle.Subtotal;
             }
@@ -90,17 +83,10 @@ namespace MauiAppUTN2026_001.ViewModels
         [RelayCommand]
         public async Task SaveAsync()
         {
-            if (string.IsNullOrWhiteSpace(NumeroHabitacion))
+            if (SelectedHabitacion == null)
             {
                 await Shell.Current.DisplayAlert(
-                    "Validación", "El número de habitación es requerido.", "OK");
-                return;
-            }
-
-            if (!double.TryParse(PrecioPorNocheText, out double precio) || precio <= 0)
-            {
-                await Shell.Current.DisplayAlert(
-                    "Validación", "Ingrese un precio por noche válido.", "OK");
+                    "Validación", "Seleccione una habitación.", "OK");
                 return;
             }
 
@@ -122,9 +108,9 @@ namespace MauiAppUTN2026_001.ViewModels
             }
 
             detalle.ReservaId = ReservaId;
-            detalle.NumeroHabitacion = NumeroHabitacion.Trim();
-            detalle.TipoHabitacion = TiposHabitacion[SelectedTipoIndex];
-            detalle.PrecioPorNoche = precio;
+            detalle.NumeroHabitacion = SelectedHabitacion.Numero;
+            detalle.TipoHabitacion = SelectedHabitacion.Tipo;
+            detalle.PrecioPorNoche = SelectedHabitacion.PrecioPorNoche;
             detalle.NumeroNoches = noches;
 
             await _db.SaveDetalleAsync(detalle);

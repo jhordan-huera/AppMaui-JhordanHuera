@@ -2,14 +2,21 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:vm="clr-namespace:MauiAppUTN2026_001.ViewModels"
+             xmlns:models="clr-namespace:MauiAppUTN2026_001.Models"
+             xmlns:converters="clr-namespace:MauiAppUTN2026_001.Converters"
              x:Class="MauiAppUTN2026_001.Views.ReservaFormPage"
              x:DataType="vm:ReservaFormViewModel"
              Title="{Binding Title}"
              BackgroundColor="#F1F5F9">
 
-    <ScrollView>
-        <VerticalStackLayout Padding="20" Spacing="0">
+    <ContentPage.Resources>
+        <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+    </ContentPage.Resources>
 
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="16">
+
+            <!-- ═══ DATOS DE LA RESERVA ═══ -->
             <Frame BackgroundColor="White"
                    Padding="24,20"
                    CornerRadius="20"
@@ -124,10 +131,136 @@
                 </VerticalStackLayout>
             </Frame>
 
+            <!-- ═══ SELECCIÓN DE HABITACIÓN ═══ -->
+            <Frame BackgroundColor="White"
+                   Padding="24,20"
+                   CornerRadius="20"
+                   BorderColor="Transparent"
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="16">
+
+                    <Label Text="🛏️ Habitación"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B"
+                           Margin="0,0,0,4" />
+
+                    <!-- Picker de habitación -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Seleccionar Habitación *"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="8,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F8FAFC">
+                            <Picker ItemsSource="{Binding Habitaciones}"
+                                    SelectedItem="{Binding SelectedHabitacion}"
+                                    ItemDisplayBinding="{Binding Display}"
+                                    FontSize="15"
+                                    TextColor="#1E293B"
+                                    Title="Escoja una habitación"
+                                    TitleColor="#94A3B8"
+                                    BackgroundColor="Transparent" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Info de la habitación seleccionada -->
+                    <Frame BackgroundColor="#F8FAFC"
+                           Padding="16,12"
+                           CornerRadius="12"
+                           BorderColor="#E2E8F0"
+                           HasShadow="False"
+                           IsVisible="{Binding SelectedHabitacion, Converter={StaticResource IsNotNullConverter}}">
+                        <Grid ColumnDefinitions="*,*,*" RowDefinitions="Auto,Auto" ColumnSpacing="12" RowSpacing="6">
+                            <Label Grid.Row="0" Grid.Column="0"
+                                   Text="Número"
+                                   FontSize="11"
+                                   TextColor="#94A3B8"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="0"
+                                   Text="{Binding SelectedHabitacion.Numero}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#1E293B" />
+
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="Tipo"
+                                   FontSize="11"
+                                   TextColor="#94A3B8"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="1"
+                                   Text="{Binding SelectedHabitacion.Tipo}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#6366F1" />
+
+                            <Label Grid.Row="0" Grid.Column="2"
+                                   Text="Precio/Noche"
+                                   FontSize="11"
+                                   TextColor="#94A3B8"
+                                   FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="2"
+                                   Text="{Binding SelectedHabitacion.PrecioPorNoche, StringFormat='${0:N2}'}"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#10B981" />
+                        </Grid>
+                    </Frame>
+
+                    <!-- Noches (calculado automáticamente por las fechas) -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Número de Noches"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="12,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F0F0F5">
+                            <Entry Text="{Binding NumeroNochesText}"
+                                   IsReadOnly="True"
+                                   FontSize="15"
+                                   TextColor="#1E293B"
+                                   BackgroundColor="Transparent" />
+                        </Frame>
+                        <Label Text="Se calcula según las fechas de Check-In y Check-Out"
+                               FontSize="11"
+                               TextColor="#94A3B8"
+                               Margin="4,0,0,0" />
+                    </VerticalStackLayout>
+
+                    <!-- Subtotal -->
+                    <Frame BackgroundColor="#EEF2FF"
+                           Padding="16,12"
+                           CornerRadius="12"
+                           BorderColor="Transparent"
+                           HasShadow="False">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="Subtotal:"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#475569"
+                                   VerticalOptions="Center" />
+                            <Label Text="{Binding Subtotal, StringFormat='${0:N2}'}"
+                                   FontSize="22"
+                                   FontAttributes="Bold"
+                                   TextColor="#6366F1"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Frame>
+
+                </VerticalStackLayout>
+            </Frame>
+
             <!-- Botones -->
             <Grid ColumnDefinitions="*,*"
                   ColumnSpacing="12"
-                  Margin="0,24,0,0">
+                  Margin="0,8,0,20">
 
                 <Button Text="Cancelar"
                         FontSize="15"
