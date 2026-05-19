@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiAppUTN2026_001.ViewModels"
+             x:Class="MauiAppUTN2026_001.Views.ReservaFormPage"
+             x:DataType="vm:ReservaFormViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#F1F5F9">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="0">
+
+            <Frame BackgroundColor="White"
+                   Padding="24,20"
+                   CornerRadius="20"
+                   BorderColor="Transparent"
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="16">
+
+                    <Label Text="Datos de la Reserva"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B"
+                           Margin="0,0,0,4" />
+
+                    <!-- Nombre -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Nombre del Huesped *"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="12,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F8FAFC">
+                            <Entry Text="{Binding NombreHuesped}"
+                                   Placeholder="Ej: Juan Perez"
+                                   PlaceholderColor="#94A3B8"
+                                   FontSize="15"
+                                   TextColor="#1E293B"
+                                   BackgroundColor="Transparent" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Telefono -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Telefono"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="12,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F8FAFC">
+                            <Entry Text="{Binding Telefono}"
+                                   Placeholder="Ej: 0999999999"
+                                   Keyboard="Telephone"
+                                   PlaceholderColor="#94A3B8"
+                                   FontSize="15"
+                                   TextColor="#1E293B"
+                                   BackgroundColor="Transparent" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Fechas -->
+                    <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Check-In"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#475569" />
+                            <Frame Padding="8,0"
+                                   CornerRadius="10"
+                                   BorderColor="#E2E8F0"
+                                   HasShadow="False"
+                                   BackgroundColor="#F8FAFC">
+                                <DatePicker Date="{Binding FechaCheckIn}"
+                                            FontSize="14"
+                                            TextColor="#1E293B"
+                                            BackgroundColor="Transparent" />
+                            </Frame>
+                        </VerticalStackLayout>
+
+                        <VerticalStackLayout Grid.Column="1" Spacing="4">
+                            <Label Text="Check-Out"
+                                   FontSize="13"
+                                   FontAttributes="Bold"
+                                   TextColor="#475569" />
+                            <Frame Padding="8,0"
+                                   CornerRadius="10"
+                                   BorderColor="#E2E8F0"
+                                   HasShadow="False"
+                                   BackgroundColor="#F8FAFC">
+                                <DatePicker Date="{Binding FechaCheckOut}"
+                                            FontSize="14"
+                                            TextColor="#1E293B"
+                                            BackgroundColor="Transparent" />
+                            </Frame>
+                        </VerticalStackLayout>
+                    </Grid>
+
+                    <!-- Estado -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Estado"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="8,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F8FAFC">
+                            <Picker ItemsSource="{Binding Estados}"
+                                    SelectedIndex="{Binding SelectedEstadoIndex}"
+                                    FontSize="15"
+                                    TextColor="#1E293B"
+                                    BackgroundColor="Transparent" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Botones -->
+            <Grid ColumnDefinitions="*,*"
+                  ColumnSpacing="12"
+                  Margin="0,24,0,0">
+
+                <Button Text="Cancelar"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        BackgroundColor="#E2E8F0"
+                        TextColor="#64748B"
+                        CornerRadius="14"
+                        HeightRequest="52"
+                        Command="{Binding CancelCommand}" />
+
+                <Button Grid.Column="1"
+                        Text="Guardar"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        BackgroundColor="#6366F1"
+                        TextColor="White"
+                        CornerRadius="14"
+                        HeightRequest="52"
+                        Command="{Binding SaveCommand}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

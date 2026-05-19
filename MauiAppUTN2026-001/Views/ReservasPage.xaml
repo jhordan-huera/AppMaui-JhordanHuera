@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiAppUTN2026_001.ViewModels"
+             xmlns:models="clr-namespace:MauiAppUTN2026_001.Models"
+             xmlns:converters="clr-namespace:MauiAppUTN2026_001.Converters"
+             x:Class="MauiAppUTN2026_001.Views.ReservasPage"
+             x:DataType="vm:ReservasViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#F1F5F9">
+
+    <ContentPage.Resources>
+        <converters:StatusColorConverter x:Key="StatusColorConverter" />
+        <converters:StatusTextConverter x:Key="StatusTextConverter" />
+        <converters:StatusBackgroundConverter x:Key="StatusBackgroundConverter" />
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <VerticalStackLayout Grid.Row="0" Padding="20,16,20,8">
+            <Label Text="Reservas"
+                   FontSize="28"
+                   FontAttributes="Bold"
+                   TextColor="#1E293B" />
+            <Label Text="Gestiona tus reservaciones de hotel"
+                   FontSize="14"
+                   TextColor="#64748B"
+                   Margin="0,2,0,12" />
+
+            <Border StrokeThickness="0"
+                    BackgroundColor="White"
+                    Padding="12,4"
+                    StrokeShape="RoundRectangle 12">
+                <SearchBar Placeholder="Buscar por huesped o codigo..."
+                           Text="{Binding SearchText}"
+                           BackgroundColor="Transparent"
+                           CancelButtonColor="#6366F1"
+                           PlaceholderColor="#94A3B8" />
+            </Border>
+        </VerticalStackLayout>
+
+        <!-- Lista -->
+        <RefreshView Grid.Row="1"
+                     IsRefreshing="{Binding IsBusy}"
+                     Command="{Binding LoadReservasCommand}"
+                     RefreshColor="#6366F1">
+
+            <CollectionView ItemsSource="{Binding Reservas}"
+                            SelectionMode="None"
+                            Margin="12,8,12,80">
+
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout HorizontalOptions="Center"
+                                         VerticalOptions="Center"
+                                         Padding="40">
+                        <Label Text="Sin reservas aun"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="#475569"
+                               HorizontalTextAlignment="Center"
+                               Margin="0,12,0,4" />
+                        <Label Text="Toca el boton + para crear tu primera reserva"
+                               FontSize="14"
+                               TextColor="#94A3B8"
+                               HorizontalTextAlignment="Center" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Reserva">
+                        <SwipeView Margin="4,6">
+                            <SwipeView.RightItems>
+                                <SwipeItems>
+                                    <SwipeItem Text="Eliminar"
+                                               BackgroundColor="#EF4444"
+                                               Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ReservasViewModel}}, Path=DeleteReservaCommand}"
+                                               CommandParameter="{Binding .}" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
+
+                            <Frame BackgroundColor="White"
+                                   Padding="16"
+                                   CornerRadius="16"
+                                   BorderColor="Transparent"
+                                   HasShadow="True">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ReservasViewModel}}, Path=GoToDetalleCommand}"
+                                        CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+
+                                    <VerticalStackLayout Grid.Row="0" Grid.Column="0">
+                                        <Label Text="{Binding CodigoReserva}"
+                                               FontSize="11"
+                                               FontAttributes="Bold"
+                                               TextColor="#6366F1"
+                                               CharacterSpacing="1" />
+                                        <Label Text="{Binding NombreHuesped}"
+                                               FontSize="18"
+                                               FontAttributes="Bold"
+                                               TextColor="#1E293B"
+                                               Margin="0,2,0,0" />
+                                    </VerticalStackLayout>
+
+                                    <Label Grid.Row="0" Grid.Column="1"
+                                           Text="{Binding Total, StringFormat='${0:N2}'}"
+                                           FontSize="20"
+                                           FontAttributes="Bold"
+                                           TextColor="#1E293B"
+                                           HorizontalTextAlignment="End"
+                                           VerticalOptions="Center" />
+
+                                    <HorizontalStackLayout Grid.Row="1" Grid.ColumnSpan="2"
+                                                           Spacing="8"
+                                                           Margin="0,8,0,0">
+                                        <Label Text="{Binding FechaCheckIn, StringFormat='In: {0:dd/MM/yyyy}'}"
+                                               FontSize="13" TextColor="#64748B" />
+                                        <Label Text="{Binding FechaCheckOut, StringFormat='Out: {0:dd/MM/yyyy}'}"
+                                               FontSize="13" TextColor="#64748B" />
+                                    </HorizontalStackLayout>
+
+                                    <HorizontalStackLayout Grid.Row="2" Grid.ColumnSpan="2"
+                                                           Margin="0,10,0,0"
+                                                           Spacing="10">
+                                        <Frame Padding="10,5"
+                                               CornerRadius="8"
+                                               BorderColor="Transparent"
+                                               HasShadow="False"
+                                               BackgroundColor="{Binding Estado, Converter={StaticResource StatusBackgroundConverter}}">
+                                            <Label Text="{Binding Estado, Converter={StaticResource StatusTextConverter}}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{Binding Estado, Converter={StaticResource StatusColorConverter}}" />
+                                        </Frame>
+                                        <Label Text="{Binding NumeroHabitaciones, StringFormat='{0} hab.'}"
+                                               FontSize="12"
+                                               TextColor="#64748B"
+                                               VerticalOptions="Center" />
+                                    </HorizontalStackLayout>
+
+                                </Grid>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- FAB -->
+        <Button Grid.Row="1"
+                Text="+"
+                FontSize="28"
+                FontAttributes="Bold"
+                TextColor="White"
+                BackgroundColor="#6366F1"
+                CornerRadius="30"
+                WidthRequest="60"
+                HeightRequest="60"
+                HorizontalOptions="End"
+                VerticalOptions="End"
+                Margin="0,0,20,24"
+                Command="{Binding GoToNewReservaCommand}" />
+    </Grid>
+</ContentPage>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:MauiAppUTN2026_001.ViewModels"
+             x:Class="MauiAppUTN2026_001.Views.DetalleFormPage"
+             x:DataType="vm:DetalleFormViewModel"
+             Title="{Binding Title}"
+             BackgroundColor="#F1F5F9">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="0">
+
+            <Frame BackgroundColor="White"
+                   Padding="24,20"
+                   CornerRadius="20"
+                   BorderColor="Transparent"
+                   HasShadow="True">
+
+                <VerticalStackLayout Spacing="16">
+
+                    <Label Text="Datos de la Habitacion"
+                           FontSize="20"
+                           FontAttributes="Bold"
+                           TextColor="#1E293B"
+                           Margin="0,0,0,4" />
+
+                    <!-- Numero de habitacion -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Numero de Habitacion *"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="12,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F8FAFC">
+                            <Entry Text="{Binding NumeroHabitacion}"
+                                   Placeholder="Ej: 101, 202, 305"
+                                   PlaceholderColor="#94A3B8"
+                                   FontSize="15"
+                                   TextColor="#1E293B"
+                                   BackgroundColor="Transparent" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Tipo -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Tipo de Habitacion"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="8,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F8FAFC">
+                            <Picker ItemsSource="{Binding TiposHabitacion}"
+                                    SelectedIndex="{Binding SelectedTipoIndex}"
+                                    FontSize="15"
+                                    TextColor="#1E293B"
+                                    BackgroundColor="Transparent" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Precio -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Precio por Noche ($) *"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="12,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F8FAFC">
+                            <Entry Text="{Binding PrecioPorNocheText}"
+                                   Placeholder="Ej: 85.00"
+                                   Keyboard="Numeric"
+                                   PlaceholderColor="#94A3B8"
+                                   FontSize="15"
+                                   TextColor="#1E293B"
+                                   BackgroundColor="Transparent" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Noches -->
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Numero de Noches *"
+                               FontSize="13"
+                               FontAttributes="Bold"
+                               TextColor="#475569" />
+                        <Frame Padding="12,0"
+                               CornerRadius="10"
+                               BorderColor="#E2E8F0"
+                               HasShadow="False"
+                               BackgroundColor="#F8FAFC">
+                            <Entry Text="{Binding NumeroNochesText}"
+                                   Placeholder="Ej: 3"
+                                   Keyboard="Numeric"
+                                   PlaceholderColor="#94A3B8"
+                                   FontSize="15"
+                                   TextColor="#1E293B"
+                                   BackgroundColor="Transparent" />
+                        </Frame>
+                    </VerticalStackLayout>
+
+                    <!-- Subtotal -->
+                    <Frame BackgroundColor="#EEF2FF"
+                           Padding="16,12"
+                           CornerRadius="12"
+                           BorderColor="Transparent"
+                           HasShadow="False">
+                        <HorizontalStackLayout Spacing="8">
+                            <Label Text="Subtotal:"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   TextColor="#475569"
+                                   VerticalOptions="Center" />
+                            <Label Text="{Binding Subtotal, StringFormat='${0:N2}'}"
+                                   FontSize="22"
+                                   FontAttributes="Bold"
+                                   TextColor="#6366F1"
+                                   VerticalOptions="Center" />
+                        </HorizontalStackLayout>
+                    </Frame>
+
+                </VerticalStackLayout>
+            </Frame>
+
+            <!-- Botones -->
+            <Grid ColumnDefinitions="*,*"
+                  ColumnSpacing="12"
+                  Margin="0,24,0,0">
+
+                <Button Text="Cancelar"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        BackgroundColor="#E2E8F0"
+                        TextColor="#64748B"
+                        CornerRadius="14"
+                        HeightRequest="52"
+                        Command="{Binding CancelCommand}" />
+
+                <Button Grid.Column="1"
+                        Text="Guardar"
+                        FontSize="15"
+                        FontAttributes="Bold"
+                        BackgroundColor="#6366F1"
+                        TextColor="White"
+                        CornerRadius="14"
+                        HeightRequest="52"
+                        Command="{Binding SaveCommand}" />
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

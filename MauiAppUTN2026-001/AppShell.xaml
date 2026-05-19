@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Shell
+    x:Class="MauiAppUTN2026_001.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:MauiAppUTN2026_001.Views"
+    Title="Hotel Reservas"
+    Shell.BackgroundColor="#6366F1"
+    Shell.ForegroundColor="White"
+    Shell.TitleColor="White"
+    Shell.TabBarBackgroundColor="White"
+    Shell.TabBarTitleColor="#6366F1"
+    Shell.TabBarUnselectedColor="#94A3B8">
+
+    <TabBar>
+        <ShellContent
+            Title="Inicio"
+            ContentTemplate="{DataTemplate views:InicioPage}"
+            Route="InicioPage" />
+
+        <ShellContent
+            Title="Reservas"
+            ContentTemplate="{DataTemplate views:ReservasPage}"
+            Route="ReservasPage" />
+    </TabBar>
+
+</Shell>
