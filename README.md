@@ -19,28 +19,20 @@ Aplicación móvil desarrollada con **.NET MAUI** y **SQLite** para la gestión 
 
 ## 📸 Capturas de Pantalla
 
-<!-- Reemplaza las rutas con tus imágenes -->
-
 ### Dashboard
-![Dashboard](<img width="1917" height="1079" alt="image" src="https://github.com/user-attachments/assets/2995b98a-d583-4831-88e9-c0b619b6569c" />
-)
+<img width="500" alt="Dashboard" src="https://github.com/user-attachments/assets/2995b98a-d583-4831-88e9-c0b619b6569c" />
 
 ### Lista de Reservas
-![Reservas](<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/ebc70997-f144-43b9-bdca-ee2e7c4b4613" />
-)
+<img width="500" alt="Lista de Reservas" src="https://github.com/user-attachments/assets/ebc70997-f144-43b9-bdca-ee2e7c4b4613" />
 
 ### Formulario de Reserva con Habitación
-![Formulario Reserva](<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/f6ee9f8d-b56f-4177-90bb-03bb14d98cd8" />
-)
+<img width="500" alt="Formulario de Reserva" src="https://github.com/user-attachments/assets/f6ee9f8d-b56f-4177-90bb-03bb14d98cd8" />
 
 ### Detalle de Reserva
-![Detalle](<img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/cd839eac-2d0c-40d3-ba40-993a742b3a0f" />
-)
+<img width="500" alt="Detalle de Reserva" src="https://github.com/user-attachments/assets/cd839eac-2d0c-40d3-ba40-993a742b3a0f" />
 
 ---
 
-
-
 ## 👨‍💻 Autor
 
-**Jhordán** — Universidad Técnica Nacional, 2026
+**Jhordan Huera** — Universidad Técnica Nacional, 2026
